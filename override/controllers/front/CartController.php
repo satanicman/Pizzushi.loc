@@ -270,6 +270,7 @@ class CartController extends CartControllerCore
         // If no errors, process product addition
         if (!$this->errors && $mode == 'add') {
             $options =  Tools::getValue('options');
+            $price_more_id = $this->id_product_attribute;
             if($options) {
                 $amount =  Tools::getValue('amount');
                 $price_more = 0;
@@ -279,18 +280,19 @@ class CartController extends CartControllerCore
                 for($i=0; $i < count($options); $i++){
                     $productOption = ProductOption::getProductOption($options[$i], $this->context->language->id);
                     if (!empty($productOption) && $productOption) {
+                        $price_more_id += $options[$i];
                         $amountOption = $amount[$i];
                         $price_more += $amountOption * $productOption[0]['price'];
                         $price_more_text_line[] = $productOption[0]['name'] . ' - ' . $amount[$i] . 'шт.';
                     }
                 }
                 if(count($price_more_text_line)){
-                    $price_more_text = $this->id_product_attribute.": дополнительные ингридиенты:\n";
+                    $price_more_text = "Дополнительные ингридиенты:\n";
                     $price_more_text .= implode('\n',$price_more_text_line);
                 }
             }
             else{
-                $price_more_text = $this->id_product_attribute.' : стандартная';
+                $price_more_text = 'Стандартная';
                 $price_more = NULL;
             }
 
@@ -313,7 +315,7 @@ class CartController extends CartControllerCore
 
             if (!$this->errors) {
                 $cart_rules = $this->context->cart->getCartRules();
-                $update_quantity = $this->context->cart->updateQty($this->qty, $this->id_product, $this->id_product_attribute, $this->customization_id, Tools::getValue('op', 'up'), $this->id_address_delivery,null,true, $price_more_text, $price_more);
+                $update_quantity = $this->context->cart->updateQty($this->qty, $this->id_product, $this->id_product_attribute, $this->customization_id, Tools::getValue('op', 'up'), $this->id_address_delivery,null,true, $price_more_text, $price_more, $price_more_id);
                 if ($update_quantity < 0) {
                     // If product has attribute, minimal quantity is set with minimal quantity of attribute
                     $minimal_quantity = ($this->id_product_attribute) ? Attribute::getAttributeMinimalQty($this->id_product_attribute) : $product->minimal_quantity;

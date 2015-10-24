@@ -881,7 +881,7 @@ class Cart extends CartCore
         return true;
     }
 
-    public function containsProduct($id_product, $price_more_text = '(empty)', $id_customization = 0, $id_address_delivery = 0)
+    public function containsProduct($id_product, $price_more_id = 0, $id_customization = 0, $id_address_delivery = 0)
     {
         $sql = 'SELECT cp.`quantity` FROM `'._DB_PREFIX_.'cart_product` cp';
 
@@ -895,7 +895,7 @@ class Cart extends CartCore
 
         $sql .= '
 			WHERE cp.`id_product` = '.(int)$id_product.'
-			AND cp.`price_more_text` = "'.(string)$price_more_text.'"
+			AND cp.`price_more_id` = '.(int)$price_more_id.'
 			AND cp.`id_cart` = '.(int)$this->id;
         if (Configuration::get('PS_ALLOW_MULTISHIPPING') && $this->isMultiAddressDelivery()) {
             $sql .= ' AND cp.`id_address_delivery` = '.(int)$id_address_delivery;
@@ -917,7 +917,7 @@ class Cart extends CartCore
      * @param string $operator Indicate if quantity must be increased or decreased
      */
     public function updateQty($quantity, $id_product, $id_product_attribute = null, $id_customization = false,
-        $operator = 'up', $id_address_delivery = 0, Shop $shop = null, $auto_add_cart_rule = true, $price_more_text = null, $price_more=0)
+        $operator = 'up', $id_address_delivery = 0, Shop $shop = null, $auto_add_cart_rule = true, $price_more_text = null, $price_more=0, $price_more_id=0)
     {
         if (!$shop) {
             $shop = Context::getContext()->shop;
@@ -984,7 +984,7 @@ class Cart extends CartCore
             /* Check if the product is already in the cart */
 
 //            $result = false;
-            $result = $this->containsProduct($id_product, $price_more_text, (int)$id_customization, (int)$id_address_delivery);
+            $result = $this->containsProduct($id_product, $price_more_id, (int)$id_customization, (int)$id_address_delivery);
 
             /* Update quantity if product already exist */
             if ($result) {
@@ -1028,7 +1028,7 @@ class Cart extends CartCore
 						UPDATE `'._DB_PREFIX_.'cart_product`
 						SET `quantity` = `quantity` '.$qty.', `date_add` = NOW()
 						WHERE `id_product` = '.(int)$id_product.
-                        ' AND `price_more_text` = "'.(string)$price_more_text.'"
+                        ' AND `price_more_id` = '.(int)$price_more_id.'
 						AND `id_cart` = '.(int)$this->id.(Configuration::get('PS_ALLOW_MULTISHIPPING') && $this->isMultiAddressDelivery() ? ' AND `id_address_delivery` = '.(int)$id_address_delivery : '').'
 						LIMIT 1'
                     );
@@ -1082,6 +1082,7 @@ class Cart extends CartCore
                                     if(!$price_more)  $price_more = 0;
                                     $insert_array['price_more'] = $price_more;
                                     $insert_array['price_more_text'] = $price_more_text;
+                                    $insert_array['price_more_id'] = $price_more_id;
                                 }
 
                                 $result_add = Db::getInstance()->insert('cart_product', $insert_array);
