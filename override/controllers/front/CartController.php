@@ -278,17 +278,19 @@ class CartController extends CartControllerCore
                 $amount = explode('-', $amount);
                 for($i=0; $i < count($options); $i++){
                     $productOption = ProductOption::getProductOption($options[$i], $this->context->language->id);
-                    $amountOption = $amount[$i];
-                    $price_more += $amountOption * $productOption[0]['price'];
-                    $price_more_text_line[] = $productOption[0]['name'].' - '.$amount[$i].'шт.';
+                    if (!empty($productOption) && $productOption) {
+                        $amountOption = $amount[$i];
+                        $price_more += $amountOption * $productOption[0]['price'];
+                        $price_more_text_line[] = $productOption[0]['name'] . ' - ' . $amount[$i] . 'шт.';
+                    }
                 }
                 if(count($price_more_text_line)){
-                    $price_more_text = "Дополнительные ингридиенты:\n";
+                    $price_more_text = $this->id_product_attribute.": дополнительные ингридиенты:\n";
                     $price_more_text .= implode('\n',$price_more_text_line);
                 }
             }
             else{
-                $price_more_text = NULL;
+                $price_more_text = $this->id_product_attribute.' : стандартная';
                 $price_more = NULL;
             }
 

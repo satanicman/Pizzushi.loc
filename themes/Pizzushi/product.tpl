@@ -115,6 +115,7 @@
 							{/if}
 							<span for="product_option[{$smarty.foreach.product_option.index}]">{$product_option.name} <span class="product_option_price">{convertPrice price=$product_option.price|floatval}</span></span>
 						</li>
+						{*test*}
 					{/foreach}
 				</ul>
 			</form>

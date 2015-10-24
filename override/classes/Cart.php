@@ -881,7 +881,7 @@ class Cart extends CartCore
         return true;
     }
 
-    public function containsProduct($id_product, $id_product_attribute = 0, $id_customization = 0, $id_address_delivery = 0)
+    public function containsProduct($id_product, $price_more_text = '(empty)', $id_customization = 0, $id_address_delivery = 0)
     {
         $sql = 'SELECT cp.`quantity` FROM `'._DB_PREFIX_.'cart_product` cp';
 
@@ -895,7 +895,7 @@ class Cart extends CartCore
 
         $sql .= '
 			WHERE cp.`id_product` = '.(int)$id_product.'
-			AND cp.`id_product_attribute` = '.(int)$id_product_attribute.'
+			AND cp.`price_more_text` = "'.(string)$price_more_text.'"
 			AND cp.`id_cart` = '.(int)$this->id;
         if (Configuration::get('PS_ALLOW_MULTISHIPPING') && $this->isMultiAddressDelivery()) {
             $sql .= ' AND cp.`id_address_delivery` = '.(int)$id_address_delivery;
@@ -982,7 +982,9 @@ class Cart extends CartCore
             return false;
         } else {
             /* Check if the product is already in the cart */
-            $result = $this->containsProduct($id_product, $id_product_attribute, (int)$id_customization, (int)$id_address_delivery);
+
+//            $result = false;
+            $result = $this->containsProduct($id_product, $price_more_text, (int)$id_customization, (int)$id_address_delivery);
 
             /* Update quantity if product already exist */
             if ($result) {
@@ -1022,42 +1024,14 @@ class Cart extends CartCore
                 } elseif ($new_qty < $minimal_quantity) {
                     return -1;
                 } else {
-                    if (isset($price_more_text) && isset($price_more) && $price_more_text != '(empty)') {
-                        Db::getInstance()->execute('
+                    Db::getInstance()->execute('
 						UPDATE `'._DB_PREFIX_.'cart_product`
-						SET `quantity` = `quantity` '.$qty.',
-						    `date_add` = NOW(),
-						    `price_more` = ' . $price_more . ',
-						    `price_more_text` = "' . $price_more_text . '"
+						SET `quantity` = `quantity` '.$qty.', `date_add` = NOW()
 						WHERE `id_product` = '.(int)$id_product.
-                            (!empty($id_product_attribute) ? ' AND `id_product_attribute` = '.(int)$id_product_attribute : '').'
+                        ' AND `price_more_text` = "'.(string)$price_more_text.'"
 						AND `id_cart` = '.(int)$this->id.(Configuration::get('PS_ALLOW_MULTISHIPPING') && $this->isMultiAddressDelivery() ? ' AND `id_address_delivery` = '.(int)$id_address_delivery : '').'
 						LIMIT 1'
-                        );
-                    } else if ($price_more_text == '(empty)') {
-                        Db::getInstance()->execute('
-                        UPDATE `' . _DB_PREFIX_ . 'cart_product`
-                        SET `quantity` = `quantity` ' . $qty . ',
-                            `date_add` = NOW(),
-                            `price_more` = 0,
-                            `price_more_text` = "(empty)"
-                        WHERE `id_product` = ' . (int)$id_product .
-                            (!empty($id_product_attribute) ? ' AND `id_product_attribute` = ' . (int)$id_product_attribute : '') . '
-                        AND `id_cart` = ' . (int)$this->id . (Configuration::get('PS_ALLOW_MULTISHIPPING') && $this->isMultiAddressDelivery() ? ' AND `id_address_delivery` = ' . (int)$id_address_delivery : '') . '
-                        LIMIT 1'
-                        );
-                    } else {
-                        $price_more_text = '';
-                        Db::getInstance()->execute('
-                        UPDATE `' . _DB_PREFIX_ . 'cart_product`
-                        SET `quantity` = `quantity` ' . $qty . ',
-                            `date_add` = NOW()
-                        WHERE `id_product` = ' . (int)$id_product .
-                            (!empty($id_product_attribute) ? ' AND `id_product_attribute` = ' . (int)$id_product_attribute : '') . '
-                        AND `id_cart` = ' . (int)$this->id . (Configuration::get('PS_ALLOW_MULTISHIPPING') && $this->isMultiAddressDelivery() ? ' AND `id_address_delivery` = ' . (int)$id_address_delivery : '') . '
-                        LIMIT 1'
-                        );
-                    }
+                    );
                 }
             }
             /* Add product to the cart */
@@ -1105,7 +1079,7 @@ class Cart extends CartCore
 
 
                                 if($price_more_text){
-                                    if(!$price_more)  $price_more = 150;
+                                    if(!$price_more)  $price_more = 0;
                                     $insert_array['price_more'] = $price_more;
                                     $insert_array['price_more_text'] = $price_more_text;
                                 }
