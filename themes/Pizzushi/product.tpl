@@ -111,8 +111,9 @@
 							{if !$product_option.selected}
 								<input type="checkbox" class="option_id not_unifrom comparator" name="options[][id]" id="product_option[[{$smarty.foreach.product_option.index}]]" value="{$product_option.id_product_option}">
 								<input type="hidden" class="amount" name="options[][amount]" value="1">
+								<label for="product_option[{$smarty.foreach.product_option.index}]">{$product_option.name} <span class="product_option_price">{convertPrice price=$product_option.price|floatval}</span></label>
 							{/if}
-							<label for="product_option[{$smarty.foreach.product_option.index}]">{$product_option.name} <span class="product_option_price">{convertPrice price=$product_option.price|floatval}</span></label>
+							<span for="product_option[{$smarty.foreach.product_option.index}]">{$product_option.name} <span class="product_option_price">{convertPrice price=$product_option.price|floatval}</span></span>
 						</li>
 					{/foreach}
 				</ul>
