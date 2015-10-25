@@ -24,10 +24,10 @@
 */
 $(document).ready(function(){
 
-	$(document).on('click', '.product_option_index', function(e){
+	$(document).on('click', '.add_list .option_item .product_option_index', function(e){
 		e.preventDefault();
 		var total = 0;
-		$('.not_base_option.checked > .amount').each(function(){
+		$('.add_list .checked > .amount').each(function(){
 			total += parseInt($(this).val());
 		});
 		if(total < 12) {
@@ -36,24 +36,63 @@ $(document).ready(function(){
 			if ($(this).siblings('#product_option_checkbox').prop('checked')) {
 				if (parseInt($(this).data('max_amount')) !== parseInt(amount.val())) {
 					amount.val(parseInt(amount.val()) + 1);
-					changPrice(ingredientPrice);
+					changPricePlus(ingredientPrice);
+					$(this).parent().clone().prependTo('.added_list').find('.option_id, .amount').remove();
 				} else {
 					console.log('Max amount');
 				}
 			} else {
 				$(this).siblings('#product_option_checkbox').prop('checked', 'checked');
 				$(this).parent().addClass('checked');
-				changPrice(ingredientPrice);
+				$(this).parent().clone().prependTo('.added_list').find('.option_id, .amount').remove();
+				changPricePlus(ingredientPrice);
 			}
 		} else {
 			console.log('Max amount of ingredients');
 		}
 	});
 
-	function changPrice(ingredientPrice){
+	$(document).on('click', '.added_list .option_item .product_option_delete', function(e){
+		e.preventDefault();
+		var addedProductOption = $(this).closest('.option_item').remove(),
+			addProductOption = $('.add_list').find('#' + addedProductOption.attr('id')),
+			ProductOptionAmount = addProductOption.children('#product_option_amount'),
+			ProductOptionIndex = addProductOption.children('.product_option_index'),
+			ProductOptionCheckBox = addProductOption.children('#product_option_checkbox');
+
+		if(parseInt(ProductOptionAmount.val()) > 1){
+			ProductOptionAmount.val(parseInt(ProductOptionAmount.val()) - 1);
+			changPriceMinus(parseInt(ProductOptionIndex.data('price')));
+		} else {
+			ProductOptionCheckBox.removeProp('checked');
+			changPriceMinus(parseInt(ProductOptionIndex.data('price')));
+		}
+	});
+
+
+	$(document).on('click', '.add_ingredient', function(e){
+		e.preventDefault;
+		var addList = $('.add_list');
+		if(addList.hasClass('active')) {
+			addList.removeClass('active').slideUp(1000);
+		} else{
+			addList.addClass('active').slideDown(1000);
+		}
+	});
+
+
+	function changPricePlus(ingredientPrice){
 		$('.attribute_price').each(function(){
 			var price = $(this).text().trim().split(' ');
 			price[0] = parseInt(price[0]) + parseInt(ingredientPrice);
+			price = price.join(' ');
+			$(this).text(price);
+		});
+	};
+	function changPriceMinus(ingredientPrice){
+		$('.attribute_price').each(function(){
+			var price = $(this).text().trim().split(' ');
+			price[0] = parseInt(price[0]) - parseInt(ingredientPrice);
 			price = price.join(' ');
 			$(this).text(price);
 		});

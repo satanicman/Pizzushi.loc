@@ -59,7 +59,7 @@
 					</span>
 				{/if}
 			</div> <!-- end image-block -->
-		</div> 
+		</div>
 		<!-- end pb-left-column -->
 		<!-- pb-right-column-->
 		<div class="pb-right-column col-xs-12 col-sm-8 col-md-7{if !$content_only} product_content_only{/if}">
@@ -105,26 +105,35 @@
 						{/foreach}
 					</div> <!-- end attributes -->
 				{/if}
-				<ul>
+				<div class="ingredients-title"><span class="ingredients-title-name">Ингридиенты</span></div>
+				<ul class="added_list clearfix">
+					<li class="option_item add_ingredient col-md-4 col-sm-4 col-xs-6">
+						<span class="product_option_index">
+							<span class="product_option_index_img">
+								<span class="product_option_index_img_square"><i class="plus"></i></span>
+							</span>
+							<span class="product_option_index_name">Добавить</span>
+						</span>
+					</li>
+				</ul>
+				<ul class="add_list clearfix">
 					{foreach from=$product_options item=product_option name=product_option}
 						{if !$product_option.selected}
-							<li class="not_base_option">
-                                <input type="checkbox" class="option_id not_unifrom comparator" name="options[][id]"
+							<li class="option_item col-md-4 col-sm-4 col-xs-6 {if $product_option.class}{$product_option.class}{/if}"
+								id="option_item_{$product_option.id_product_option}">
+								<input type="checkbox" class="hidden option_id not_unifrom comparator" name="options[][id]"
 									   value="{$product_option.id_product_option}"
-										id="product_option_checkbox">
+									   id="product_option_checkbox">
 								<input type="hidden" class="amount" name="options[][amount]" value="1"
-										id="product_option_amount">
+									   id="product_option_amount">
 								<span class="product_option_index"
 									  data-price="{$product_option.price}"
 									  data-max_amount="{$product_option.max_amount}">
-									{$product_option.name}
+									<span class="product_option_index_img">
+                                        <span class="product_option_delete"></span>
+									</span>
+									<span class="product_option_index_name">{$product_option.name}</span>
 								</span>
-                            </li>
-						{else}
-							<li class="base_option">
-                                <span>
-                                    {$product_option.name}
-                                </span>
 							</li>
 						{/if}
 					{/foreach}

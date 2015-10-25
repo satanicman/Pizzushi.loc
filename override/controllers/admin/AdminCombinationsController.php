@@ -131,6 +131,12 @@ class AdminCombinationsControllerCore extends AdminController
                     'name' => 'max_amount',
                     'size' => 40,
                     'required' => true
+                ),
+                array(
+                    'type' => 'text',
+                    'label' => $this->l('Class:'),
+                    'name' => 'class',
+                    'size' => 40
                 )
             )
         );

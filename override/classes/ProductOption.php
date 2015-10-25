@@ -10,6 +10,8 @@ class ProductOptionCore extends ObjectModel
 
     public $max_amount;
 
+    public $class;
+
     public static $definition = array(
         'table' => 'product_option',
         'primary' => 'id_product_option',
@@ -18,12 +20,13 @@ class ProductOptionCore extends ObjectModel
             'name' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCatalogName', 'required' => true, 'size' => 128),
             'price' => array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
             'max_amount' => array('type' => self::TYPE_INT),
+            'class' => array('type' => self::TYPE_STRING)
         )
     );
 
 
     public static function getProductOptions($id_lang){
-        $sql = "SELECT po.id_product_option, po.price, po.max_amount, pol.name FROM "._DB_PREFIX_."product_option po
+        $sql = "SELECT po.id_product_option, po.price, po.class, po.max_amount, pol.name FROM "._DB_PREFIX_."product_option po
             LEFT JOIN "._DB_PREFIX_."product_option_lang pol ON (po.id_product_option=pol.id_product_option AND pol.id_lang={$id_lang})";
         return Db::getInstance()->executeS($sql);
     }
