@@ -107,15 +107,26 @@
 				{/if}
 				<ul>
 					{foreach from=$product_options item=product_option name=product_option}
-						<li>
-							{if !$product_option.selected}
-								<input type="checkbox" class="option_id not_unifrom comparator" name="options[][id]" id="product_option[[{$smarty.foreach.product_option.index}]]" value="{$product_option.id_product_option}">
-								<input type="hidden" class="amount" name="options[][amount]" value="1">
-								<label for="product_option[{$smarty.foreach.product_option.index}]">{$product_option.name} <span class="product_option_price">{convertPrice price=$product_option.price|floatval}</span></label>
-							{/if}
-							<span for="product_option[{$smarty.foreach.product_option.index}]">{$product_option.name} <span class="product_option_price">{convertPrice price=$product_option.price|floatval}</span></span>
-						</li>
-						{*test*}
+						{if !$product_option.selected}
+							<li class="not_base_option">
+                                <input type="checkbox" class="option_id not_unifrom comparator" name="options[][id]"
+									   value="{$product_option.id_product_option}"
+										id="product_option_checkbox">
+								<input type="hidden" class="amount" name="options[][amount]" value="1"
+										id="product_option_amount">
+								<span class="product_option_index"
+									  data-price="{$product_option.price}"
+									  data-max_amount="{$product_option.max_amount}">
+									{$product_option.name}
+								</span>
+                            </li>
+						{else}
+							<li class="base_option">
+                                <span>
+                                    {$product_option.name}
+                                </span>
+							</li>
+						{/if}
 					{/foreach}
 				</ul>
 			</form>

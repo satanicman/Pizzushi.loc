@@ -23,15 +23,51 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 $(document).ready(function(){
-	ajaxCart.overrideButtonsInThePage();
 
-	$(document).on('click', '.block_cart_collapse', function(e){
+	$(document).on('click', '.product_option_index', function(e){
 		e.preventDefault();
-		ajaxCart.collapse();
+		var total = 0;
+		$('.not_base_option.checked > .amount').each(function(){
+			total += parseInt($(this).val());
+		});
+		if(total < 12) {
+			var amount = $(this).siblings('#product_option_amount'),
+				ingredientPrice = $(this).data('price');
+			if ($(this).siblings('#product_option_checkbox').prop('checked')) {
+				if (parseInt($(this).data('max_amount')) !== parseInt(amount.val())) {
+					amount.val(parseInt(amount.val()) + 1);
+					changPrice(ingredientPrice);
+				} else {
+					console.log('Max amount');
+				}
+			} else {
+				$(this).siblings('#product_option_checkbox').prop('checked', 'checked');
+				$(this).parent().addClass('checked');
+				changPrice(ingredientPrice);
+			}
+		} else {
+			console.log('Max amount of ingredients');
+		}
 	});
+
+	function changPrice(ingredientPrice){
+		$('.attribute_price').each(function(){
+			var price = $(this).text().trim().split(' ');
+			price[0] = parseInt(price[0]) + parseInt(ingredientPrice);
+			price = price.join(' ');
+			$(this).text(price);
+		});
+	};
+
 	$(document).on('click', '.block_cart_expand', function(e){
 		e.preventDefault();
 		ajaxCart.expand();
+	});
+
+	ajaxCart.overrideButtonsInThePage();
+	$(document).on('click', '.block_cart_collapse', function(e){
+		e.preventDefault();
+		ajaxCart.collapse();
 	});
 
 	var current_timestamp = parseInt(new Date().getTime() / 1000);
