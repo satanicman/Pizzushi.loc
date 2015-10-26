@@ -55,21 +55,23 @@
 			<pre class="hidden">{$product|var_dump}</pre>
 			<div class="product-container" itemscope itemtype="https://schema.org/Product">
 				<div class="left-block">
-					<div class="product-image-container" ontouchstart="this.classList.toggle('hover');">
-						<span class="product_img_link">
-							<img class="replace-2x img-responsive" src="{$link->getImageLink($product.link_rewrite, $product.id_image, 'home_default')|escape:'html':'UTF-8'}" alt="{if !empty($product.legend)}{$product.legend|escape:'html':'UTF-8'}{else}{$product.name|escape:'html':'UTF-8'}{/if}" title="{if !empty($product.legend)}{$product.legend|escape:'html':'UTF-8'}{else}{$product.name|escape:'html':'UTF-8'}{/if}" {if isset($homeSize)} width="{$homeSize.width}" height="{$homeSize.height}"{/if} itemprop="image" />
-						</span>
-						<div class="description">
-							<p class="description-title-container"><span class="description-title">Состав:<span class="bdr"></span></span></p>
-							<p class="description-text">
-								{foreach from=$product.features item=feature}
-									{if $feature.name == Composition}
-										{$feature.value}
-									{/if}
-								{/foreach}
-							</p>
+					<a class="quick-view product-name" href="{$product.link|escape:'html':'UTF-8'}" rel="{$product.link|escape:'html':'UTF-8'}">
+						<div class="product-image-container" ontouchstart="this.classList.toggle('hover');">
+							<span class="product_img_link">
+								<img class="replace-2x img-responsive" src="{$link->getImageLink($product.link_rewrite, $product.id_image, 'home_default')|escape:'html':'UTF-8'}" alt="{if !empty($product.legend)}{$product.legend|escape:'html':'UTF-8'}{else}{$product.name|escape:'html':'UTF-8'}{/if}" title="{if !empty($product.legend)}{$product.legend|escape:'html':'UTF-8'}{else}{$product.name|escape:'html':'UTF-8'}{/if}" {if isset($homeSize)} width="{$homeSize.width}" height="{$homeSize.height}"{/if} itemprop="image" />
+							</span>
+							<div class="description">
+								<p class="description-title-container"><span class="description-title">Состав:<span class="bdr"></span></span></p>
+								<p class="description-text">
+									{foreach from=$product.features item=feature}
+										{if $feature.name == Composition}
+											{$feature.value}
+										{/if}
+									{/foreach}
+								</p>
+							</div>
 						</div>
-					</div>
+					</a>
 					{if isset($product.is_virtual) && !$product.is_virtual}{hook h="displayProductDeliveryTime" product=$product}{/if}
 					{hook h="displayProductPriceBlock" product=$product type="weight"}
 				</div>
