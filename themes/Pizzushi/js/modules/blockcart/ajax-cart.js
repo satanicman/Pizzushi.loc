@@ -36,7 +36,7 @@ $(document).ready(function(){
 			if ($(this).siblings('#product_option_checkbox').prop('checked')) {
 				if (parseInt($(this).data('max_amount')) !== parseInt(amount.val())) {
 					amount.val(parseInt(amount.val()) + 1);
-					changPricePlus(ingredientPrice);
+					changPrice();
 					$(this).parent().clone().prependTo('.added_list').find('.option_id, .amount').remove();
 				} else {
 					console.log('Max amount');
@@ -45,7 +45,7 @@ $(document).ready(function(){
 				$(this).siblings('#product_option_checkbox').prop('checked', 'checked');
 				$(this).parent().addClass('checked');
 				$(this).parent().clone().prependTo('.added_list').find('.option_id, .amount').remove();
-				changPricePlus(ingredientPrice);
+				changPrice();
 			}
 		} else {
 			console.log('Max amount of ingredients');
@@ -62,10 +62,10 @@ $(document).ready(function(){
 
 		if(parseInt(ProductOptionAmount.val()) > 1){
 			ProductOptionAmount.val(parseInt(ProductOptionAmount.val()) - 1);
-			changPriceMinus(parseInt(ProductOptionIndex.data('price')));
+			changPrice();
 		} else {
 			ProductOptionCheckBox.removeProp('checked');
-			changPriceMinus(parseInt(ProductOptionIndex.data('price')));
+			changPrice();
 		}
 	});
 
@@ -81,18 +81,17 @@ $(document).ready(function(){
 	});
 
 
-	function changPricePlus(ingredientPrice){
-		$('.attribute_price').each(function(){
-			var price = $(this).text().trim().split(' ');
-			price[0] = parseInt(price[0]) + parseInt(ingredientPrice);
-			price = price.join(' ');
-			$(this).text(price);
+	function changPrice(){
+		var ingredientPrice = 0;
+		$('.add_list .option_item').each(function(){
+			if($(this).find('#product_option_checkbox').prop('checked')) {
+				ingredientPrice += parseInt($(this).find('#product_option_amount').val()) * parseInt($(this).find('.product_option_index').data('price'));
+			}
 		});
-	};
-	function changPriceMinus(ingredientPrice){
 		$('.attribute_price').each(function(){
-			var price = $(this).text().trim().split(' ');
-			price[0] = parseInt(price[0]) - parseInt(ingredientPrice);
+			var price = $(this).text().trim().split(' '),
+				basePrice = $(this).data('base_price');
+			price[0] = parseInt(basePrice) + parseInt(ingredientPrice);
 			price = price.join(' ');
 			$(this).text(price);
 		});

@@ -91,7 +91,7 @@
 													<p>Вес: {$product->weight + $group_attribute.weight}</p>
 												</div>
 											</div>
-											<div class="attribute_price">
+											<div class="attribute_price" data-base_price="{$productPrice + $group_attribute.price}">
 												<span>{convertPrice price=($productPrice + $group_attribute.price)|floatval}</span>
 											</div>
 											<p id="add_to_cart">
