@@ -408,6 +408,7 @@ function deleteProductFromSummary(id)
 	var productId = 0;
 	var productAttributeId = 0;
 	var id_address_delivery = 0;
+	var priceMoreId = 0;
 	var ids = 0;
 	ids = id.split('_');
 	productId = parseInt(ids[0]);
@@ -417,6 +418,8 @@ function deleteProductFromSummary(id)
 		customizationId = parseInt(ids[2]);
 	if (typeof(ids[3]) !== 'undefined')
 		id_address_delivery = parseInt(ids[3]);
+	if (typeof(ids[4]) !== 'undefined')
+		priceMoreId = parseInt(ids[4]);
 	$.ajax({
 		type: 'POST',
 		headers: { "cache-control": "no-cache" },
@@ -431,7 +434,8 @@ function deleteProductFromSummary(id)
 			+ '&id_address_delivery='+id_address_delivery
 			+ ((customizationId !== 0) ? '&id_customization=' + customizationId : '')
 			+ '&token=' + static_token
-			+ '&allow_refresh=1',
+			+ '&allow_refresh=1'
+			+ '&pmi=' + priceMoreId,
 		success: function(jsonData)
 		{
 			if (jsonData.hasError)

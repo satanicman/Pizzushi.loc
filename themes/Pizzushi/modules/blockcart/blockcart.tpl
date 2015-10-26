@@ -36,7 +36,7 @@
 								{foreach from=$products item='product' name='myLoop'}
 									{assign var='productId' value=$product.id_product}
 									{assign var='productAttributeId' value=$product.id_product_attribute}
-									<dt data-id="cart_block_product_{$product.id_product|intval}_{if $product.id_product_attribute}{$product.id_product_attribute|intval}{else}0{/if}_{if $product.id_address_delivery}{$product.id_address_delivery|intval}{else}0{/if}" class="{if $smarty.foreach.myLoop.first}first_item{elseif $smarty.foreach.myLoop.last}last_item{else}item{/if}">
+									<dt data-id="cart_block_product_{$product.id_product|intval}_{if $product.id_product_attribute}{$product.id_product_attribute|intval}{else}0{/if}_{if $product.id_address_delivery}{$product.id_address_delivery|intval}{else}0{/if}_{if $product.price_more_id}{$product.price_more_id}{else}0{/if}" class="{if $smarty.foreach.myLoop.first}first_item{elseif $smarty.foreach.myLoop.last}last_item{else}item{/if}">
 										<a class="cart-images" href="{$link->getProductLink($product.id_product, $product.link_rewrite, $product.category)|escape:'html':'UTF-8'}" title="{$product.name|escape:'html':'UTF-8'}"><img src="{$link->getImageLink($product.link_rewrite, $product.id_image, 'cart_default')}" alt="{$product.name|escape:'html':'UTF-8'}" /></a>
 										<div class="cart-info">
 											<div class="product-name">
@@ -44,12 +44,18 @@
 											</div>
 											{if isset($product.attributes_small)}
 												<div class="product-atributes">
-													<a href="{$link->getProductLink($product, $product.link_rewrite, $product.category, null, null, $product.id_shop, $product.id_product_attribute)|escape:'html':'UTF-8'}" title="{l s='Product detail' mod='blockcart'}">{$product.attributes_small}</a>
+													<a href="{$link->getProductLink($product, $product.link_rewrite, $product.category, null, null, $product.id_shop, $product.id_product_attribute)|escape:'html':'UTF-8'}" title="{l s='Product detail' mod='blockcart'}">{$product.attributes}</a>
 												</div>
+											{/if}
+											{if $product.price_more_text != 'Стандартная'}
+											<span class="ingredients">
+												Дополнительные ингридиенты:<br/>
+												{$product.price_more_text|replace:'шт.':'шт.<br/>'}
+											</span>
 											{/if}
 											<span class="price">
 												{if !isset($product.is_gift) || !$product.is_gift}
-													{if $priceDisplay == $smarty.const.PS_TAX_EXC}{displayWtPrice p="`$product.total`"}{else}{displayWtPrice p="`$product.total_wt`"}{/if}
+													{if $priceDisplay == $smarty.const.PS_TAX_EXC}{displayWtPrice p="`$product.total + $product.price_more`"}{else}{displayWtPrice p="`$product.total_wt + $product.price_more`"}{/if}
                                                     <div class="hookDisplayProductPriceBlock-price">
                                                         {hook h="displayProductPriceBlock" product=$product type="price" from="blockcart"}
                                                     </div>
@@ -65,7 +71,7 @@
 										</span>
 									</dt>
 									{if isset($product.attributes_small)}
-										<dd data-id="cart_block_combination_of_{$product.id_product|intval}{if $product.id_product_attribute}_{$product.id_product_attribute|intval}{/if}_{$product.id_address_delivery|intval}" class="{if $smarty.foreach.myLoop.first}first_item{elseif $smarty.foreach.myLoop.last}last_item{else}item{/if}">
+										<dd data-id="cart_block_combination_of_{$product.id_product|intval}{if $product.id_product_attribute}_{$product.id_product_attribute|intval}{/if}_{$product.id_address_delivery|intval}_{if $product.price_more_id}{$product.price_more_id}{else}0{/if}" class="{if $smarty.foreach.myLoop.first}first_item{elseif $smarty.foreach.myLoop.last}last_item{else}item{/if}">
 									{/if}
 									<!-- Customizable datas -->
 									{if isset($customizedDatas.$productId.$productAttributeId[$product.id_address_delivery])}

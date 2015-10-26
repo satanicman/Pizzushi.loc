@@ -60,6 +60,7 @@ class CartController extends CartControllerCore
         // Get page main parameters
         $this->id_product = (int)Tools::getValue('id_product', null);
         $this->id_product_attribute = (int)Tools::getValue('id_product_attribute', Tools::getValue('ipa'));
+        $this->price_more_id = (int)Tools::getValue('price_more_id', Tools::getValue('pmi'));
         $this->customization_id = (int)Tools::getValue('id_customization');
         $this->qty = abs(Tools::getValue('qty', 1));
         $this->id_address_delivery = (int)Tools::getValue('id_address_delivery');
@@ -131,13 +132,14 @@ class CartController extends CartControllerCore
             }
         }
 
-        if ($this->context->cart->deleteProduct($this->id_product, $this->id_product_attribute, $this->customization_id, $this->id_address_delivery)) {
+        if ($this->context->cart->deleteProduct($this->id_product, $this->id_product_attribute, $this->customization_id, $this->id_address_delivery, $this->price_more_id)) {
             Hook::exec('actionAfterDeleteProductInCart', array(
                 'id_cart' => (int)$this->context->cart->id,
                 'id_product' => (int)$this->id_product,
                 'id_product_attribute' => (int)$this->id_product_attribute,
                 'customization_id' => (int)$this->customization_id,
-                'id_address_delivery' => (int)$this->id_address_delivery
+                'id_address_delivery' => (int)$this->id_address_delivery,
+                'price_more_id' => (int)$this->price_more_id
             ));
 
             if (!Cart::getNbProducts((int)$this->context->cart->id)) {
@@ -287,8 +289,7 @@ class CartController extends CartControllerCore
                     }
                 }
                 if(count($price_more_text_line)){
-                    $price_more_text = "Дополнительные ингридиенты:\n";
-                    $price_more_text .= implode('\n',$price_more_text_line);
+                    $price_more_text = implode('\n',$price_more_text_line);
                 }
             }
             else{

@@ -506,7 +506,8 @@ class Cart extends CartCore
         $sql = new DbQuery();
 
         // Build SELECT
-        $sql->select('cp.`id_product_attribute`, cp.`id_product`, cp.`quantity` AS cart_quantity, cp.id_shop, pl.`name`, p.`is_virtual`,cp.`price_more`,cp.`price_more_text`,
+        $sql->select('cp.`id_product_attribute`, cp.`id_product`, cp.`quantity` AS cart_quantity, cp.id_shop, pl.`name`, p.`is_virtual`,
+                        cp.`price_more`,cp.`price_more_text`, cp.price_more_id,
 						pl.`description_short`, pl.`available_now`, pl.`available_later`, product_shop.`id_category_default`, p.`id_supplier`,
 						p.`id_manufacturer`, product_shop.`on_sale`, product_shop.`ecotax`, product_shop.`additional_shipping_cost`,
 						product_shop.`available_for_order`, product_shop.`price`, product_shop.`active`, product_shop.`unity`, product_shop.`unit_price_ratio`,
@@ -1276,7 +1277,7 @@ class Cart extends CartCore
      * @param int $id_customization Customization id
      * @return bool result
      */
-    public function deleteProduct($id_product, $id_product_attribute = null, $id_customization = null, $id_address_delivery = 0)
+    public function deleteProduct($id_product, $id_product_attribute = null, $id_customization = null, $id_address_delivery = 0, $price_more_id = 0)
     {
         if (isset(self::$_nbProducts[$this->id])) {
             unset(self::$_nbProducts[$this->id]);
@@ -1329,17 +1330,18 @@ class Cart extends CartCore
 				UPDATE `'._DB_PREFIX_.'cart_product`
 				SET `quantity` = '.(int)$result['quantity'].'
 				WHERE `id_cart` = '.(int)$this->id.'
-				AND `id_product` = '.(int)$id_product.
+				AND `id_product` = '.(int)$id_product.'
+				AND `price_more_id` = '.(int)$price_more_id.
                 ($id_product_attribute != null ? ' AND `id_product_attribute` = '.(int)$id_product_attribute : '')
             );
         }
-
         /* Product deletion */
         $result = Db::getInstance()->execute('
 		DELETE FROM `'._DB_PREFIX_.'cart_product`
 		WHERE `id_product` = '.(int)$id_product.'
 		'.(!is_null($id_product_attribute) ? ' AND `id_product_attribute` = '.(int)$id_product_attribute : '').'
 		AND `id_cart` = '.(int)$this->id.'
+		AND `price_more_id` = '.(int)$price_more_id.'
 		'.((int)$id_address_delivery ? 'AND `id_address_delivery` = '.(int)$id_address_delivery : ''));
 
         if ($result) {

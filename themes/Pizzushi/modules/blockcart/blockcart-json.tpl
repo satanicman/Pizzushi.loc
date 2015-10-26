@@ -37,13 +37,15 @@
 		"priceByLine": {if $priceDisplay == $smarty.const.PS_TAX_EXC}{displayWtPrice|json_encode p=($product.total + $product.price_more)}{else}{displayWtPrice|json_encode p=($product.total_wt + $product.price_more)}{/if},
 		"name": {$product.name|trim|html_entity_decode:2:'UTF-8'|json_encode},
 		"price": {if $priceDisplay == $smarty.const.PS_TAX_EXC}{displayWtPrice|json_encode p=($product.total + $product.price_more)}{else}{displayWtPrice|json_encode p=($product.total_wt + $product.price_more)}{/if},
-		"price_float": {$product.total|floatval|json_encode},
+		"price_float": {($product.total + $product.price_more)|floatval|json_encode},
 		"idCombination": {if isset($product.attributes_small)}{$productAttributeId|intval}{else}0{/if},
 		"idAddressDelivery": {if isset($product.id_address_delivery)}{$product.id_address_delivery|intval}{else}0{/if},
 		"is_gift": {if isset($product.is_gift) && $product.is_gift}true{else}false{/if},
 {if isset($product.attributes_small)}
 		"hasAttributes": true,
-		"attributes": {$product.attributes_small|json_encode},
+		"attributes": {$product.attributes|json_encode},
+		"price_more_text": {$product.price_more_text|trim|html_entity_decode:2:'UTF-8'|json_encode},
+		"price_more_id": {$product.price_more_id|intval},
 {else}
 		"hasAttributes": false,
 {/if}

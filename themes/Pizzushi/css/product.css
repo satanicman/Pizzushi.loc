@@ -1178,12 +1178,12 @@ ul#text_fields {
 .add_ingredient .product_option_index_img_square:before {
   content: '';
   display: block;
-  width: 43px;
-  height: 43px;
+  width: 44px;
+  height: 44px;
   position: absolute;
   border: 1px solid #f8f8f8;
-  left: 7.5px;
-  top: 7.5px;
+  left: 7px;
+  top: 7px;
 }
 
 .product_option_index_img {

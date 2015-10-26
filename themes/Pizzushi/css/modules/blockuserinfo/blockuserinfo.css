@@ -119,6 +119,9 @@ a.login:before{
   background: #fff;
   padding: 35px 0;
   position: relative;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
 }
 .header_user_info_icon{
   width: 59px;

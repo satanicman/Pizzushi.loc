@@ -1,27 +1,27 @@
 /*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Academic Free License (AFL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/afl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+ * 2007-2015 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ *  @author PrestaShop SA <contact@prestashop.com>
+ *  @copyright  2007-2015 PrestaShop SA
+ *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ *  International Registered Trademark & Property of PrestaShop SA
+ */
 $(document).ready(function(){
 
 	$(document).on('click', '.add_list .option_item .product_option_index', function(e){
@@ -228,6 +228,7 @@ var ajaxCart = {
 			var customizationId = 0;
 			var productId = 0;
 			var productAttributeId = 0;
+			var priceMoreId = 0;
 			var customizableProductDiv = $($(this).parent().parent()).find("div[data-id^=deleteCustomizableProduct_]");
 			var idAddressDelivery = false;
 
@@ -258,10 +259,12 @@ var ajaxCart = {
 					productAttributeId = parseInt(ids[1]);
 				if (typeof(ids[2]) != 'undefined')
 					idAddressDelivery = parseInt(ids[2]);
+				if (typeof(ids[3]) != 'undefined')
+					priceMoreId = parseInt(ids[3]);
 			}
 
 			// Removing product from the cart
-			ajaxCart.remove(productId, productAttributeId, customizationId, idAddressDelivery);
+			ajaxCart.remove(productId, productAttributeId, customizationId, idAddressDelivery, priceMoreId);
 		});
 	},
 
@@ -350,16 +353,16 @@ var ajaxCart = {
 	updateFancyBox : function (){},
 	// add a product in the cart via ajax
 	add : function(idProduct, idCombination, addedFromProductPage, callerElement, quantity, whishlist){
-						var options = [],
-							amount = [];
-						$('.option_id').each(function(index, el) {
-							if ($(this).is(':checked')) {
-								options.push($(this).val());
-								amount.push($(this).siblings('.amount').val());
-							}
-						});
-						options = options.join('-');
-						amount = amount.join('-');
+		var options = [],
+			amount = [];
+		$('.option_id').each(function(index, el) {
+			if ($(this).is(':checked')) {
+				options.push($(this).val());
+				amount.push($(this).siblings('.amount').val());
+			}
+		});
+		options = options.join('-');
+		amount = amount.join('-');
 		if (addedFromProductPage && !checkCustomizations())
 		{
 			if (contentOnly)
@@ -398,10 +401,10 @@ var ajaxCart = {
 			this.expand();
 		//send the ajax request to the server
 
-					var data = 'controller=cart&add=1&ajax=true&qty=' + ((quantity && quantity != null) ? quantity : '1') + '&id_product=' + idProduct + '&token=' + static_token + ( (parseInt(idCombination) && idCombination != null) ? '&ipa=' + parseInt(idCombination): '' + '&id_customization=' + ((typeof customizationId !== 'undefined') ? customizationId : 0));
-					if(options && amount){
-						data += '&options=' + options + '&amount=' + amount;
-					}
+		var data = 'controller=cart&add=1&ajax=true&qty=' + ((quantity && quantity != null) ? quantity : '1') + '&id_product=' + idProduct + '&token=' + static_token + ( (parseInt(idCombination) && idCombination != null) ? '&ipa=' + parseInt(idCombination): '' + '&id_customization=' + ((typeof customizationId !== 'undefined') ? customizationId : 0));
+		if(options && amount){
+			data += '&options=' + options + '&amount=' + amount;
+		}
 
 		$.ajax({
 			type: 'POST',
@@ -466,15 +469,15 @@ var ajaxCart = {
 				var error = "Impossible to add the product to the cart.<br/>textStatus: '" + textStatus + "'<br/>errorThrown: '" + errorThrown + "'<br/>responseText:<br/>" + XMLHttpRequest.responseText;
 				if (!!$.prototype.fancybox)
 					$.fancybox.open([
-					{
-						type: 'inline',
-						autoScale: true,
-						minHeight: 30,
-						content: '<p class="fancybox-error">' + error + '</p>'
-					}],
-					{
-						padding: 0
-					});
+							{
+								type: 'inline',
+								autoScale: true,
+								minHeight: 30,
+								content: '<p class="fancybox-error">' + error + '</p>'
+							}],
+						{
+							padding: 0
+						});
 				else
 					alert(error);
 				//reactive the button when adding has finished
@@ -487,7 +490,12 @@ var ajaxCart = {
 	},
 
 	//remove a product from the cart via ajax
-	remove : function(idProduct, idCombination, customizationId, idAddressDelivery){
+	remove : function(idProduct, idCombination, customizationId, idAddressDelivery, priceMoreId){
+
+		var dataType = 'controller=cart&delete=1&id_product=' + idProduct + '&ipa=' + ((idCombination != null && parseInt(idCombination)) ? idCombination : '') + ((customizationId && customizationId != null) ? '&id_customization=' + customizationId : '') + '&id_address_delivery=' + idAddressDelivery + '&token=' + static_token + '&ajax=true';
+		if(priceMoreId){
+			dataType += '&pmi=' + priceMoreId;
+		}
 		//send the ajax request to the server
 		$.ajax({
 			type: 'POST',
@@ -496,11 +504,11 @@ var ajaxCart = {
 			async: true,
 			cache: false,
 			dataType : "json",
-			data: 'controller=cart&delete=1&id_product=' + idProduct + '&ipa=' + ((idCombination != null && parseInt(idCombination)) ? idCombination : '') + ((customizationId && customizationId != null) ? '&id_customization=' + customizationId : '') + '&id_address_delivery=' + idAddressDelivery + '&token=' + static_token + '&ajax=true',
+			data: dataType,
 			success: function(jsonData)	{
 				ajaxCart.updateCart(jsonData);
 				if ($('body').attr('id') == 'order' || $('body').attr('id') == 'order-opc')
-					deleteProductFromSummary(idProduct+'_'+idCombination+'_'+customizationId+'_'+idAddressDelivery);
+					deleteProductFromSummary(idProduct+'_'+idCombination+'_'+customizationId+'_'+idAddressDelivery+'_'+priceMoreId);
 			},
 			error: function()
 			{
@@ -545,7 +553,7 @@ var ajaxCart = {
 				{
 					//we've called the variable aProduct because IE6 bug if this variable is called product
 					//if product has attributes
-					if (jsonData.products[aProduct]['id'] == ids[0] && (!ids[1] || jsonData.products[aProduct]['idCombination'] == ids[1]))
+					if (jsonData.products[aProduct]['id'] == ids[0] && (!ids[1] || jsonData.products[aProduct]['idCombination'] == ids[1]) && jsonData.products[aProduct]['price_more_id'] == ids[3])
 					{
 						stayInTheCart = true;
 						// update the product customization display (when the product is still in the cart)
@@ -657,7 +665,7 @@ var ajaxCart = {
 
 	// Update product quantity
 	updateProductQuantity : function (product, quantity){
-		$('dt[data-id=cart_block_product_' + product.id + '_' + (product.idCombination ? product.idCombination : '0')+ '_' + (product.idAddressDelivery ? product.idAddressDelivery : '0') + '] .quantity').fadeTo('fast', 0, function(){
+		$('dt[data-id=cart_block_product_' + product.id + '_' + (product.idCombination ? product.idCombination : '0')+ '_' + (product.idAddressDelivery ? product.idAddressDelivery : '0') + '_' + product.price_more_id + '] .quantity').fadeTo('fast', 0, function(){
 			$(this).text(quantity);
 			$(this).fadeTo('fast', 1, function(){
 				$(this).fadeTo('fast', 0, function(){
@@ -686,8 +694,8 @@ var ajaxCart = {
 					$('.cart_block_no_products').hide();
 				}
 				//if product is not in the displayed cart, add a new product's line
-				var domIdProduct = this.id + '_' + (this.idCombination ? this.idCombination : '0') + '_' + (this.idAddressDelivery ? this.idAddressDelivery : '0');
-				var domIdProductAttribute = this.id + '_' + (this.idCombination ? this.idCombination : '0');
+				var domIdProduct = this.id + '_' + (this.idCombination ? this.idCombination : '0') + '_' + (this.idAddressDelivery ? this.idAddressDelivery : '0') + '_' + this.price_more_id;
+				var domIdProductAttribute = this.id + '_' + (this.idCombination ? this.idCombination : '0') + '_' + this.price_more_id;
 
 				if ($('dt[data-id="cart_block_product_' + domIdProduct + '"]').length == 0)
 				{
@@ -699,7 +707,9 @@ var ajaxCart = {
 					content += '<a class="cart-images" href="' + this.link + '" title="' + name + '"><img  src="' + this.image_cart + '" alt="' + this.name +'"></a>';
 					content += '<div class="cart-info"><div class="product-name">' + '<span class="quantity-formated"><span class="quantity">' + this.quantity + '</span>&nbsp;x&nbsp;</span><a href="' + this.link + '" title="' + this.name + '" class="cart_block_product_name">' + name + '</a></div>';
 					if (this.hasAttributes)
-						  content += '<div class="product-atributes"><a href="' + this.link + '" title="' + this.name + '">' + this.attributes + '</a></div>';
+						content += '<div class="product-atributes"><a href="' + this.link + '" title="' + this.name + '">' + this.attributes + '</a></div>';
+					if (this.price_more_text != 'Стандартная')
+						content += '<span class="ingredients">Дополнительные ингридиенты:<br/>' + this.price_more_text.replace(/шт./g, 'шт.<br/>') + '</span>';
 					if (typeof(freeProductTranslation) != 'undefined')
 						content += '<span class="price">' + (parseFloat(this.price_float) > 0 ? this.priceByLine : freeProductTranslation) + '</span></div>';
 
@@ -750,11 +760,11 @@ var ajaxCart = {
 				}
 				$('.cart_block dl.products .unvisible').slideDown(450).removeClass('unvisible');
 
-			var removeLinks = $('dt[data-id="cart_block_product_' + domIdProduct + '"]').find('a.ajax_cart_block_remove_link');
-			if (this.hasCustomizedDatas && removeLinks.length)
-				$(removeLinks).each(function(){
-					$(this).remove();
-				});
+				var removeLinks = $('dt[data-id="cart_block_product_' + domIdProduct + '"]').find('a.ajax_cart_block_remove_link');
+				if (this.hasCustomizedDatas && removeLinks.length)
+					$(removeLinks).each(function(){
+						$(this).remove();
+					});
 			}
 		});
 	},
