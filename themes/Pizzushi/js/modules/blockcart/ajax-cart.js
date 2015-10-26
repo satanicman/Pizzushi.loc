@@ -220,6 +220,14 @@ var ajaxCart = {
 			});
 		}
 
+		$(window.document).ready(function () {
+			$(window.document).off('click', '#add_to_cart button').on('click', '#add_to_cart button', function(e){
+				e.preventDefault();
+				ajaxCart.add($('#product_page_product_id').val(), $(this).data('id-combination'), true, null, $('#quantity_wanted').val(), null);
+			});
+		});
+
+
 		//for 'delete' buttons in the cart block...
 		$(document).off('click', '.cart_block_list .ajax_cart_block_remove_link').on('click', '.cart_block_list .ajax_cart_block_remove_link', function(e){
 			e.preventDefault();
