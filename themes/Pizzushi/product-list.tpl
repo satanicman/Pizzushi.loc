@@ -63,11 +63,13 @@
 							<div class="description">
 								<p class="description-title-container"><span class="description-title">Состав:<span class="bdr"></span></span></p>
 								<p class="description-text">
-									{foreach from=$product.features item=feature}
-										{if $feature.name == Composition}
-											{$feature.value}
-										{/if}
+								{if $product.product_options}
+									{foreach from=$product.product_options item=option name=options}
+										{$option.name|trim}{if $smarty.foreach.options.index != ($product.product_options|count -1)},{/if}
 									{/foreach}
+								{else}
+									Еще публикуется
+								{/if}
 								</p>
 							</div>
 						</div>
