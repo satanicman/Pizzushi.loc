@@ -113,9 +113,9 @@ $(document).ready(function(){
 	$('#page').css('paddingTop', (padTop - 5));
 	$('#right_column').css('paddingTop', (padTop));
 
-	$('ul.product_list.grid > li .product-container .product-image-container').click(function(event) {
-		$(this).toggleClass('click');
-	});
+	//$('ul.product_list.grid > li .product-container .product-image-container').click(function(event) {
+	//	$(this).toggleClass('click');
+	//});
 	$('.button-container .label_radio:checked').each(function() {
 		var btn = $(this).parent().siblings('.button');
 		var price = $(this).data('price').split(' ');

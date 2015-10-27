@@ -35,7 +35,6 @@ class AdminCombinationsControllerCore extends AdminController
         $this->table = 'product_option';
         $this->className = 'ProductOption';
         $this->lang = true;
-
         $this->addRowAction('edit');
         $this->addRowAction('delete');
 
@@ -55,7 +54,7 @@ class AdminCombinationsControllerCore extends AdminController
         );
 
         $this->fields_list = array(
-            'ingridient_id' => array(
+            'id_product_option' => array(
                 'title' => $this->l('ID'),
                 'align' => 'center',
                 'width' => 25

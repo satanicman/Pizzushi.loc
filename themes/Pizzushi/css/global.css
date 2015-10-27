@@ -6202,10 +6202,11 @@ span.exclusive {
   font-family: 'robotomedium';
   font-weight: 500;
   line-height: 35px;
-  font-size: 26px;
+  font-size: 1.368em;
 }
 .button.ajax_add_to_cart_button > span{
   width: 50%;
+  line-height: 1 !important;
   text-align: center;
   display: -webkit-flex;
   display: -moz-flex;
@@ -6670,7 +6671,7 @@ table.table_block td {
   font-family: 'robotobold';
   font-size: 30px;
   line-height: 32px;
-  margin-bottom: 60px;
+  margin-bottom: 20px;
 }
   .page-heading span.heading-counter {
     font: bold 13px/22px Arial, Helvetica, sans-serif;
@@ -6722,7 +6723,8 @@ ul.footer_links {
       margin-left: 10px; }
 
 .content_sortPagiBar .sortPagiBar .select{
-  margin-bottom: 55px;
+  margin-bottom: 15px;
+  padding-left: 0;
 }
 .content_sortPagiBar .sortPagiBar {
   clear: both; }
@@ -6755,7 +6757,7 @@ ul.footer_links {
     display: block;
     color: #404040;
     font-weight: 300;
-    margin-bottom: 55px;
+    margin-bottom: 15px;
     font-family: 'robotolight';
     font-size: 24px;
     line-height: 33px;
@@ -7229,7 +7231,7 @@ div.star a:hover {
   line-height: 33px;
 }
 .breadcrumb {
-  margin: 60px 0;
+  margin: 20px 0;
   display: -webkit-flex;
   display: -moz-flex;
   display: -ms-flex;
@@ -8630,7 +8632,7 @@ div.star.star_hover:after {
   display:      -o-flex;
   display: -ms-flexbox;
   display:         flex;
-  width: 90%;
+  width: 80%;
   height: 44px;
   margin: 20px auto;
   color: #3CAB1F;

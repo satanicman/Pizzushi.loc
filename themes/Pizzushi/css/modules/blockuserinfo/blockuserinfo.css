@@ -79,7 +79,7 @@ a.login:before{
   -ms-flex-wrap: wrap;
   -o-flex-wrap: wrap;
   flex-wrap: wrap;
-  padding: 0 10px;
+  padding: 0 30px;
 }
 .header_user_info .header_user_info_col a {
   display: -webkit-flex;
