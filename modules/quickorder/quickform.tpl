@@ -1,47 +1,30 @@
 <div id="qform" class="quickform">
-	<h2 class="title">{l s='Quick order' mod='quickorder'}</h2>
 	<div class="qform_container">
-	<div id="errors" class="error hidden"></div>
+	<div id="errors" class="error" style="display: none;"></div>
 	<div id="success" class="success hidden">{l s='Thanks' mod='quickorder'}<br>{l s='Order complete' mod='quickorder'}</div>
 	{if $total <= 0}<div class="error">{l s='Your cart is is empty' mod='quickorder'}</div>{/if}
 
 	{if $total > 0}
 	<div id="wrap" class="form_container">
-		<p class="text">
-			<label for="firstname">{l s='First name:' mod='quickorder'}<sup class="required">*</sup></label>
-			<input type="text" class="required" id="firstname" name="firstname" value="{if $logged}{$cookie->customer_firstname}{/if}">
-			
-		</p>
-		<p class="text">
-			<label for="lastname">{l s='Last name:' mod='quickorder'}<sup class="required">*</sup></label>
-			<input type="text" class="required" id="lastname" name="lastname" value="{if $logged}{$cookie->customer_lastname}{/if}">
-			
-		</p>
-		<p class="text">
-			<label for="email">{l s='E-mail:' mod='quickorder'}<sup class="required">*</sup></label>
-			<input type="text" class="required" id="email" name="email" value="{if $logged}{$cookie->email}{/if}" />
-
-		</p>
-		<p class="text">
-			<label for="phone_mobile">{l s='Mobile phone:' mod='quickorder'}<sup class="required">*</sup></label>
-			<input type="text" class="required" name="phone_mobile" id="phone_mobile" value="" />
-
-		</p>
-		<p class="text textarea">
-			<label for="address">{l s='Address:' mod='quickorder'}<sup class="required">*</sup></label>
-			<textarea name="address" id="address" cols="26" rows="2"></textarea>
-
-		</p>
-		<p class="text textarea">
-			<label for="comment">{l s='Comment:' mod='quickorder'}</label>
-			<textarea name="comment" id="comment" cols="26" rows="5"></textarea>
-		</p>
+        <input type="text" class="qo_input" id="firstname" name="firstname" value="{if $logged}{$cookie->customer_firstname}{/if}" placeholder="{l s='Имя' mod='quickorder'}">
+        <input type="text" class="qo_input" name="phone_mobile" id="phone_mobile" value="" placeholder="{l s='Телефон' mod='quickorder'}"/>
+        <textarea name="comment" class="qo_textarea" id="comment" cols="26" rows="5" placeholder="{l s='Комментарий' mod='quickorder'}"></textarea>
+		<div class="time">
+			<input id="timepicker" type="text" class="qo_time" data-template="false">
+			<input type="checkbox" class="qo_checkbox not_unifrom comparator" name="time_now" id="time_now">
+			<label for="time_now" class="qo_label">На сейчас</label>
+		</div>
 	</div>
-	<div class="submit">
-        <div class="myrequired"><sup class="required">*</sup> {l s='Required fields' mod='quickorder'}</div>
-		<input class="button" type="submit" title="{l s='Click here to submit your order!' mod='quickorder'}" name="submitOrder" id="submitOrder" value="{l s='Submit order' mod='quickorder'}">
-	</div>
-
+		<script>
+			$('#timepicker').timepicker({
+				showMeridian: false,
+				icons: {
+					up: 'fa fa-chevron-up',
+					down: 'fa fa-chevron-down'
+				},
+				minuteStep: 1
+			});
+		</script>
 	{/if}
 </div>
 </div>

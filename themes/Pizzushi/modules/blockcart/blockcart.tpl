@@ -172,8 +172,9 @@
 						{l s='Check out' mod='blockcart'}<i class="icon-chevron-right right"></i>
 					</span>
 				</a> -->
-				<a id="quickorder" href="#" rel="nofollow" title="{l s='Quick order' mod='quickorder'}"><span>{l s='Оформить заказ' mod='quickorder'}</span></a>
+				<a id="quickorder_custom" href="#" class="quickorder" rel="nofollow" title="{l s='Quick order' mod='quickorder'}"><span>{l s='Оформить заказ' mod='quickorder'}</span></a>
 			</div>
+			<div id="quickorder_custom_form"></div>
 		</div>
 		<!-- <a href="{$link->getPageLink($order_process, true)|escape:'html':'UTF-8'}" title="{l s='View my shopping cart' mod='blockcart'}" rel="nofollow">
 			<b>{l s='Cart' mod='blockcart'}</b>

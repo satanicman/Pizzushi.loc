@@ -37,14 +37,14 @@ $(document).ready(function(){
 				if (parseInt($(this).data('max_amount')) !== parseInt(amount.val())) {
 					amount.val(parseInt(amount.val()) + 1);
 					changPrice();
-					$(this).parent().clone().prependTo('.added_list').find('.option_id, .amount').remove();
+					$(this).parent().clone().insertBefore('.add_ingredient').find('.option_id, .amount').remove();
 				} else {
 					console.log('Max amount');
 				}
 			} else {
 				$(this).siblings('#product_option_checkbox').prop('checked', 'checked');
 				$(this).parent().addClass('checked');
-				$(this).parent().clone().prependTo('.added_list').find('.option_id, .amount').remove();
+				$(this).parent().clone().insertBefore('.add_ingredient').find('.option_id, .amount').remove();
 				changPrice();
 			}
 		} else {

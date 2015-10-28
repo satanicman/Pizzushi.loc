@@ -18,16 +18,12 @@ if (Tools::isSubmit('submitQorder'))
 				$errors[] = $quickorder->l('Cart not found', 'ajax');
 			if (Cart::getNbProducts($context->cart->id) <= 0)
 				$errors[] = $quickorder->l('You must add minimum 1 quantity', 'ajax');
-			if (!Tools::getValue('email') || !Validate::isEmail(Tools::getValue('email')))
-				$errors[] = $quickorder->l('Invalid e-mail address', 'ajax');
 			if (!Tools::getValue('phone') || !Validate::isPhoneNumber(Tools::getValue('phone')))
 				$errors[] = $quickorder->l('You must register at least one phone number', 'ajax');
 			if (!Tools::getValue('firstname') || !Validate::isName(Tools::getValue('firstname')))
 				$errors[] = $quickorder->l('Name is empty or contains error', 'ajax');
-			if (!Tools::getValue('lastname') || !Validate::isName(Tools::getValue('lastname')))
-				$errors[] = $quickorder->l('Last name is empty or contains error', 'ajax');
-			if (!Tools::getValue('address'))
-				$errors[] = $quickorder->l('Address is empty or contains error', 'ajax');
+			if (!Tools::getValue('time'))
+				$errors[] = $quickorder->l('Time is empty or contains error', 'ajax');
 
 				if (!empty($errors))
 					die(Tools::jsonEncode(array('hasError' => true, 'errors' => $errors)));
@@ -42,8 +38,8 @@ if (Tools::isSubmit('submitQorder'))
 
 							$customer->passwd = md5(time()._COOKIE_KEY_);
 							$customer->firstname = Tools::getValue('firstname');
-							$customer->lastname = Tools::getValue('lastname');
-							$customer->email = Tools::getValue('email');
+							$customer->lastname = ' ';
+							$customer->email = 'default@default.ru';
 							$customer->active = 1;
 							$customer->is_guest = (Configuration::get('QUI_CREATE_CUSTOMER') ? '0' : '1');
 
@@ -58,10 +54,10 @@ if (Tools::isSubmit('submitQorder'))
 								$address->id_country = Country::getByIso(Configuration::get('QUI_COUNTRY'));
 
 							$address->firstname = Tools::getValue('firstname');
-							$address->lastname = Tools::getValue('lastname');
+							$address->lastname = ' ';
 							$address->phone_mobile = Tools::getValue('phone');
-							$address->other = 'Эл.адрес:'.' '.Tools::getValue('email')."\r\n".'Адрес:'.' '.Tools::getValue('address');
-							$address->address1 = Tools::getValue('address');
+							$address->other = 'Эл.адрес:'.' default@default.ru'."\r\n".'Время: '.Tools::getValue('time');
+							$address->address1 = ' ';
 							$address->city = ' ';
 							$address->alias = 'quickorder_' . substr(md5(time()._COOKIE_KEY_), 0, 7);
 							$address->id_customer = $customer->id;
@@ -84,7 +80,7 @@ if (Tools::isSubmit('submitQorder'))
 							$message = new Message();
 							$message->id_cart = $cart->id;
 							$message->message = 
-							'Имя:'.' '.Tools::getValue('firstname')."\r\n".'Фамилия:'.' '.Tools::getValue('lastname')."\r\n".'Эл.адрес:'.' '.Tools::getValue('email')."\r\n".'Адрес:'.' '.Tools::getValue('address')."\r\n".'Телефон:'.' '.Tools::getValue('phone');
+							'Имя:'.' '.Tools::getValue('firstname')."\r\n".'Эл.адрес:'.' default@default.ru'."\r\n".'Телефон:'.' '.Tools::getValue('phone')."\r\n".'Время:	 '.Tools::getValue('time');
 							$message->private = true;
 							$message->add();
 						}
@@ -171,16 +167,16 @@ if (Tools::isSubmit('submitQorder'))
 						$data = array(
 							'{shop_name}' => Configuration::get('PS_SHOP_NAME'),
 							'{firstname}' => Tools::getValue('firstname'),
-							'{lastname}' => Tools::getValue('lastname'),
-							'{email}' => Tools::getValue('email'),
-							'{address}' => Tools::getValue('address'),
+							'{lastname}' => ' ',
+							'{email}' => 'default@default.ru',
+							'{address}' => ' ',
 							'{phone}' => Tools::getValue('phone'),
 							'{comment}' => Tools::getValue('comment'),
 							'{items}' => $products_list, 
 						);
 
 						if (Validate::isEmail(Configuration::get('QUI_CREATE_ORDER_EMAIL')))
-							$id_lang = (int)$context->language->id; 
+							$id_lang = (int)$context->language->id;
 							$iso = Language::getIsoById($id_lang);
 							if (file_exists(dirname(__FILE__).'/mails/'.$iso.'/quick.txt') && file_exists(dirname(__FILE__).'/mails/'.$iso.'/quick.html'))
 								Mail::Send($id_lang, 'quick', Mail::l('New order (without registration)'), $data, Configuration::get('QUI_CREATE_ORDER_EMAIL'), null, strval(Configuration::get('PS_SHOP_EMAIL')), strval(Configuration::get('PS_SHOP_NAME')), null, null, dirname(__FILE__).'/mails/');

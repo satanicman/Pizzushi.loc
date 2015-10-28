@@ -91,7 +91,7 @@ body {
   margin: 0; }
 
 a:focus {
-  outline: thin dotted; }
+  text-decoration: none;}
 
 a:active,
 a:hover {
@@ -254,11 +254,7 @@ a {
   text-decoration: none; }
   a:hover, a:focus {
     color: #515151;
-    text-decoration: underline; }
-  a:focus {
-    outline: thin dotted #333;
-    outline: 5px auto -webkit-focus-ring-color;
-    outline-offset: -2px; }
+    text-decoration: none; }
 
 img {
   vertical-align: middle; }
@@ -8623,7 +8619,7 @@ div.star.star_hover:after {
 .bx-wrapper .bx-pager, .bx-wrapper .bx-controls-auto{
   bottom: 40px !important;
 }
-.cart-buttons #quickorder {
+.cart-buttons .quickorder {
   font-family: "robotolight";
   font-size: 18px;
   display: -webkit-flex;
@@ -8634,7 +8630,7 @@ div.star.star_hover:after {
   display:         flex;
   width: 80%;
   height: 44px;
-  margin: 20px auto;
+  margin: 15px auto;
   color: #3CAB1F;
   float: none;
   text-align: center;

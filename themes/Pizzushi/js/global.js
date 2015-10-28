@@ -26,6 +26,92 @@
 var responsiveflag = false;
 
 $(document).ready(function(){
+
+	$(document).on('click', '#quickorder_custom:not(.active)', function(e){
+		e.preventDefault();
+		var btn = $(this);
+		$('#quickorder_custom_form').load(baseDir + 'modules/quickorder/ajax.php', function(response, status, xhr){
+			if (xhr.responseText.search(/Корзина пуста/) == -1){
+				$('#quickorder_custom_form').slideDown();
+				btn.addClass('active');
+			}
+		});
+	});
+
+	//if ($('#time').attr('type') === 'text') {
+	//	$('#time').blur(function(event) {
+	//		console.clear();
+	//		var time = $(this).val().split(':');
+	//		if (!time[0] || !time[1]) {
+	//			$(this).val('00:00');
+	//			return false;
+	//		}
+	//		if(time[0].search(/^(([0,1][0-9])|(2[0-3]))$/) == -1){
+	//			time[0] = '00';
+	//		}
+	//		if(time[1].search(/^[0-5][0-9]$/) == -1){
+	//			time[1] = '00';
+	//		}
+	//		$(this).val(time.join(':'));
+	//	});
+	//}
+
+	$(document).on('click', '#quickorder_custom.active', function(e){
+		e.preventDefault();
+		var btn = $(this),
+			qform_container = $(this).parent().siblings('#quickorder_custom_form'),
+			wrap = qform_container.find('#wrap'),
+			phone = wrap.find('#phone_mobile').val(),
+			firstname = wrap.find('#firstname').val(),
+			comment = wrap.find('#comment').val(),
+			time;
+
+		if($('#time_now').prop('checked')) {
+			time = 'На сейчас';
+		} else {
+			time = wrap.find('.qo_time').val();
+		}
+
+		$.ajax({
+			type: 'POST',
+			url: baseDir + 'modules/quickorder/ajax.php',
+			async: true,
+			cache: false,
+			dataType : "json",
+			data: 'submitQorder=true' + '&phone=' + phone + '&time=' + time + '&firstname=' + firstname + '&lastname=' + comment + '&token=' + static_token,
+			success: function(jsonData)
+			{
+				if (jsonData.hasError)
+				{
+					var errors = '<b>'+'Ошибки: ' + '</b><ol>';
+					for(error in jsonData.errors)
+						if(error != 'indexOf')
+							errors += '<li>'+jsonData.errors[error]+'</li>';
+					errors += '</ol>';
+					wrap.siblings('#errors').html(errors).slideDown('slow');
+				}
+				else
+				{
+					btn.removeClass('active');
+					$('.ajax_cart_quantity, .ajax_cart_product_txt_s, .ajax_cart_product_txt, .ajax_cart_total').each(function(){
+						$(this).hide();
+					});
+					$('.cart_block dl.products').remove();
+					$('.cart-prices').hide();
+					$('.cart_block_no_products').show('slow');
+
+					$('#qform #wrap').hide();
+					$('#qform #errors').slideUp('slow', function(){
+						$('#qform #errors').hide();
+						$('#qform .submit').hide();
+						$('#qform #success').show();
+					});
+				}
+			},
+			error: function(XMLHttpRequest, textStatus, errorThrown) {alert("TECHNICAL ERROR: unable create order \n\nDetails:\nError: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus);}
+		});
+	});
+
 	highdpiInit();
 	responsiveResize();
 	$(window).resize(responsiveResize);
