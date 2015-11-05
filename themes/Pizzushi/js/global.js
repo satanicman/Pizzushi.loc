@@ -32,8 +32,15 @@ $(document).ready(function(){
 		var btn = $(this);
 		$('#quickorder_custom_form').load(baseDir + 'modules/quickorder/ajax.php', function(response, status, xhr){
 			if (xhr.responseText.search(/Корзина пуста/) == -1){
+				$('#empty_cart').hide();
+				$('.header_user_info, .cart_block, .cart-total').slideUp();
 				$('#quickorder_custom_form').slideDown();
 				btn.addClass('active');
+			} else {
+				$('#empty_cart').slideDown();
+				setTimeout(function(){
+					$('#empty_cart').slideUp();
+				}, 2000);
 			}
 		});
 	});
@@ -343,8 +350,10 @@ function quick_view()
 		if (!!$.prototype.fancybox)
 			$.fancybox({
 				'padding':  0,
+				'autoDimensions'    : false,
+				'autoSize': false,
 				'width':    1210,
-				'height':   898,
+				'height':   866,
 				'type':     'iframe',
 				'href':     url + 'content_only=1' + anchor
 			});

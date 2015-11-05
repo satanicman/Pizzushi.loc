@@ -2,7 +2,7 @@
 /* primary_block ***************************************************************************** */
 .primary_block {
   background-color: #fff;
-  padding: 40px 70px 75px 45px;
+  padding: 40px 70px 60px 45px;
   border-radius: 7px;
   margin: 0;
 }
@@ -37,7 +37,9 @@ a.fancybox-nav {
   position: relative;
   display: block;
   cursor: pointer;
-  padding: 0;}
+  font-size: 16px;
+  padding: 0;
+}
   .pb-left-column #image-block img {
     background: #fbfbfb;
     width: 100%; }
@@ -955,6 +957,7 @@ ul#text_fields {
       -ms-align-items: center;
           align-items: center;
   -ms-flex-align: center;
+  font-size: 16px;
 }
 .attribute_short_info {
   font-family: "robotolight";
@@ -1020,7 +1023,8 @@ ul#text_fields {
   font-weight: 900;
   line-height: 1;
   text-align: center;
-  margin: 0 0 35px 0;
+  margin: 10px 0 30px;
+  letter-spacing: 1.5px;
 }
 .pb-left-column #image-block img{
   border-radius: 50%;

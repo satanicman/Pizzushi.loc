@@ -8239,10 +8239,10 @@ div.star.star_hover:after {
   background: none !important; }
 
 .fancybox-skin .fancybox-close {
-  width: 28px;
-  right: 30px;
-  top: 30px;
-  height: 28px;
+  width: 30px;
+  right: 35px;
+  top: 40px;
+  height: 30px;
   background: none;
   font-size: 28px;
   color: #3eab1e;
@@ -9114,16 +9114,16 @@ div.star.star_hover:after {
 .add_ingredient .product_option_index_img_square .plus:after{
   top: 0;
   left: 50%;
-  margin-left: -1.5px;
+  margin-left: -1px;
   height: 100%;
-  width: 3px;
+  width: 2px;
 }
 .add_ingredient .product_option_index_img_square .plus:before{
   left: 0;
   top: 50%;
-  margin-top: -1.5px;
+  margin-top: -1px;
   width: 100%;
-  height: 3px;
+  height: 2px;
 }
 .add_ingredient .product_option_index_img_square .plus:before,
 .add_ingredient .product_option_index_img_square .plus:after {
@@ -9134,8 +9134,8 @@ div.star.star_hover:after {
 }
 .add_ingredient .product_option_index_img_square .plus {
   display: inline-block;
-  width: 20px;
-  height: 20px;
+  width: 15px;
+  height: 15px;
   position: relative;
   -webkit-transform: rotate(-45deg);
   -moz-transform: rotate(-45deg);
@@ -9144,8 +9144,8 @@ div.star.star_hover:after {
   transform: rotate(-45deg);
 }
 .add_ingredient .product_option_index_img_square {
-  width: 58px;
-  height: 58px;
+  width: 44px;
+  height: 44px;
   display: block;
   background-color: #158029;
   position: relative;
@@ -9171,8 +9171,8 @@ div.star.star_hover:after {
 .add_ingredient .product_option_index_img_square:before {
   content: '';
   display: block;
-  width: 44px;
-  height: 44px;
+  width: 30px;
+  height: 30px;
   position: absolute;
   border: 1px solid #f8f8f8;
   left: 7px;
@@ -9181,9 +9181,9 @@ div.star.star_hover:after {
 
 .product_option_index_img {
   width: 100%;
-  height: 100px;
+  height: 80px;
   display: block;
-  margin-bottom: 20px;
+  margin-bottom: 0px;
 }
 
 .added_list .product_option_index_img .product_option_delete:before {
@@ -9245,3 +9245,7 @@ div.star.star_hover:after {
   background: url(../img/ingredients/parsley.png) center no-repeat;
 }
 /*Ingredients #END*/
+#empty_cart{
+  margin: 0;
+  display: none;
+}

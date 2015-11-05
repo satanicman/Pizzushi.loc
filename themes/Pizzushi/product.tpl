@@ -39,16 +39,14 @@
 	<meta itemprop="url" content="{$link->getProductLink($product)}">
 	<div class="primary_block row">
 		<!-- left infos-->
-		<div class="pb-left-column col-xs-12 col-sm-4 col-md-5">
+		<div class="pb-left-column col-xs-12 col-sm-4 col-md-6">
 			<!-- product img-->
 			<div id="image-block" class="clearfix">
 				<h1 itemprop="name" class="product_name">{$product->name|escape:'html':'UTF-8'}</h1>
 				{if $have_image}
 					<span id="view_full_size">
 						{if $jqZoomEnabled && $have_image && !$content_only}
-							<a class="jqzoom" title="{if !empty($cover.legend)}{$cover.legend|escape:'html':'UTF-8'}{else}{$product->name|escape:'html':'UTF-8'}{/if}" rel="gal1" href="{$link->getImageLink($product->link_rewrite, $cover.id_image, 'thickbox_default')|escape:'html':'UTF-8'}">
 								<img itemprop="image" src="{$link->getImageLink($product->link_rewrite, $cover.id_image, 'large_default')|escape:'html':'UTF-8'}" title="{if !empty($cover.legend)}{$cover.legend|escape:'html':'UTF-8'}{else}{$product->name|escape:'html':'UTF-8'}{/if}" alt="{if !empty($cover.legend)}{$cover.legend|escape:'html':'UTF-8'}{else}{$product->name|escape:'html':'UTF-8'}{/if}"/>
-							</a>
 						{else}
 							<img id="bigpic" itemprop="image" src="{$link->getImageLink($product->link_rewrite, $cover.id_image, 'large_default')|escape:'html':'UTF-8'}" title="{if !empty($cover.legend)}{$cover.legend|escape:'html':'UTF-8'}{else}{$product->name|escape:'html':'UTF-8'}{/if}" alt="{if !empty($cover.legend)}{$cover.legend|escape:'html':'UTF-8'}{else}{$product->name|escape:'html':'UTF-8'}{/if}" width="{$largeSize.width}" height="{$largeSize.height}"/>
 						{/if}
@@ -62,93 +60,104 @@
 		</div>
 		<!-- end pb-left-column -->
 		<!-- pb-right-column-->
-		<div class="pb-right-column col-xs-12 col-sm-8 col-md-7{if !$content_only} product_content_only{/if}">
+		<div class="pb-right-column col-xs-12 col-sm-8 col-md-6{if !$content_only} product_content_only{/if}">
 			{if ($product->show_price && !isset($restricted_country_mode)) || isset($groups) || $product->reference || (isset($HOOK_PRODUCT_ACTIONS) && $HOOK_PRODUCT_ACTIONS)}
-			<!-- add to cart form-->
-			<form id="buy_block"{if $PS_CATALOG_MODE && !isset($groups) && $product->quantity > 0} class="hidden"{/if} action="{$link->getPageLink('cart')|escape:'html':'UTF-8'}" method="post">
-				<!-- hidden datas -->
-				<p class="hidden">
-					<input type="hidden" name="token" value="{$static_token}" />
-					<input type="hidden" name="id_product" value="{$product->id|intval}" id="product_page_product_id" />
-					<input type="hidden" name="add" value="1" />
-					<input type="hidden" name="id_product_attribute" id="idCombination" value="" />
-				</p>
-				{if !$PS_CATALOG_MODE}
-					<input type="hidden" min="1" name="qty" id="quantity_wanted" class="text" value="{if isset($quantityBackup)}{$quantityBackup|intval}{else}{if $product->minimal_quantity > 1}{$product->minimal_quantity}{else}1{/if}{/if}" />
-				{/if}
-				{if isset($groups)}
-					<!-- attributes -->
-					<div id="attributes">
-						{foreach from=$groups key=id_attribute_group item=group}
-							{if $group.attributes|@count}
-								{assign var="groupName" value="group_$id_attribute_group"}
-									{foreach from=$group.attributes key=id_attribute item=group_attribute}
-										<div class="attribute">
-											<div class="attribute_short_info_wrap">
-												<div class="square"></div>
-												<div class="attribute_short_info">
-													<p>{$group.name|escape:'html':'UTF-8'}: {$group_attribute.name|escape:'html':'UTF-8'}</p>
-													<p>Вес: {$product->weight + $group_attribute.weight}</p>
-												</div>
-											</div>
-											<div class="attribute_price" data-base_price="{$productPrice + $group_attribute.price}">
-												<span>{convertPrice price=($productPrice + $group_attribute.price)|floatval}</span>
-											</div>
-											<p id="add_to_cart">
-												<button type="submit" name="Submit" class="exclusive product_btn" data-id-combination="{$group_attribute.id_product_attribute}">
-													<span>{if $content_only && (isset($product->customization_required) && $product->customization_required)}{l s='Customize'}{else}{l s='Add to cart'}{/if}</span>
-												</button>
-											</p>
-										</div>
-									{/foreach}
-							{/if}
-						{/foreach}
-					</div> <!-- end attributes -->
-				{/if}
-				<div class="ingredients-title"><span class="ingredients-title-name">Ингридиенты</span></div>
-				<ul class="added_list clearfix">
-					{foreach from=$product_options item=product_option name=product_option}
-						{if $product_option.selected}
-							<li class="option_item col-md-4 col-sm-4 col-xs-6 {if $product_option.class}{$product_option.class}{/if}"
-								id="option_item_{$product_option.id_product_option}">
-								<span class="product_option_index">
-									<span class="product_option_index_img">
-									</span>
-									<span class="product_option_index_name">{$product_option.name}</span>
-								</span>
-							</li>
+				<div class="row">
+					<!-- add to cart form-->
+					<form id="buy_block"{if $PS_CATALOG_MODE && !isset($groups) && $product->quantity > 0} class="hidden"{/if}
+						  action="{$link->getPageLink('cart')|escape:'html':'UTF-8'}" method="post">
+						<!-- hidden datas -->
+						<p class="hidden">
+							<input type="hidden" name="token" value="{$static_token}"/>
+							<input type="hidden" name="id_product" value="{$product->id|intval}"
+								   id="product_page_product_id"/>
+							<input type="hidden" name="add" value="1"/>
+							<input type="hidden" name="id_product_attribute" id="idCombination" value=""/>
+						</p>
+						{if !$PS_CATALOG_MODE}
+							<input type="hidden" min="1" name="qty" id="quantity_wanted" class="text"
+								   value="{if isset($quantityBackup)}{$quantityBackup|intval}{else}{if $product->minimal_quantity > 1}{$product->minimal_quantity}{else}1{/if}{/if}"/>
 						{/if}
-					{/foreach}
-					<li class="option_item add_ingredient col-md-4 col-sm-4 col-xs-6">
-						<span class="product_option_index">
-							<span class="product_option_index_img">
-								<span class="product_option_index_img_square"><i class="plus"></i></span>
-							</span>
-							<span class="product_option_index_name">Добавить</span>
-						</span>
-					</li>
-				</ul>
-				<ul class="add_list clearfix">
-					{foreach from=$product_options item=product_option name=product_option}
-                        <li class="option_item col-md-4 col-sm-4 col-xs-6 {if $product_option.class}{$product_option.class}{/if}"
-                            id="option_item_{$product_option.id_product_option}">
-                            <input type="checkbox" class="hidden option_id not_unifrom comparator" name="options[][id]"
-                                   value="{$product_option.id_product_option}"
-                                   id="product_option_checkbox">
-                            <input type="hidden" class="amount" name="options[][amount]" value="1"
-                                   id="product_option_amount">
-                            <span class="product_option_index"
-                                  data-price="{$product_option.price}"
-                                  data-max_amount="{$product_option.max_amount}">
-                                <span class="product_option_index_img">
-                                    <span class="product_option_delete"></span>
-                                </span>
-                                <span class="product_option_index_name">{$product_option.name}</span>
-                            </span>
-                        </li>
-					{/foreach}
-				</ul>
-			</form>
+						{if isset($groups)}
+							<!-- attributes -->
+							<div id="attributes">
+								{foreach from=$groups key=id_attribute_group item=group}
+									{if $group.attributes|@count}
+										{assign var="groupName" value="group_$id_attribute_group"}
+										{foreach from=$group.attributes key=id_attribute item=group_attribute}
+											<div class="attribute">
+												<div class="attribute_short_info_wrap">
+													<div class="square"></div>
+													<div class="attribute_short_info">
+														<p>{$group.name|escape:'html':'UTF-8'}
+															: {$group_attribute.name|escape:'html':'UTF-8'}</p>
+
+														<p>Вес: {$product->weight + $group_attribute.weight}</p>
+													</div>
+												</div>
+												<div class="attribute_price"
+													 data-base_price="{$productPrice + $group_attribute.price}">
+													<span>{convertPrice price=($productPrice + $group_attribute.price)|floatval}</span>
+												</div>
+												<p id="add_to_cart">
+													<button type="submit" name="Submit" class="exclusive product_btn"
+															data-id-combination="{$group_attribute.id_product_attribute}">
+														<span>{if $content_only && (isset($product->customization_required) && $product->customization_required)}{l s='Customize'}{else}{l s='Add to cart'}{/if}</span>
+													</button>
+												</p>
+											</div>
+										{/foreach}
+									{/if}
+								{/foreach}
+							</div>
+							<!-- end attributes -->
+						{/if}
+						<div class="ingredients-title"><span class="ingredients-title-name">Ингридиенты</span></div>
+						<ul class="added_list clearfix">
+							{foreach from=$product_options item=product_option name=product_option}
+								{if $product_option.selected}
+									<li class="option_item col-md-4 col-sm-4 col-xs-6 {if $product_option.class}{$product_option.class}{/if}"
+										id="option_item_{$product_option.id_product_option}">
+											<span class="product_option_index">
+												<span class="product_option_index_img">
+												</span>
+												<span class="product_option_index_name">{$product_option.name}</span>
+											</span>
+									</li>
+								{/if}
+							{/foreach}
+							<li class="option_item add_ingredient col-md-4 col-sm-4 col-xs-6">
+									<span class="product_option_index">
+										<span class="product_option_index_img">
+											<span class="product_option_index_img_square"><i class="plus"></i></span>
+										</span>
+										<span class="product_option_index_name">Добавить</span>
+									</span>
+							</li>
+						</ul>
+						<ul class="add_list clearfix">
+							{foreach from=$product_options item=product_option name=product_option}
+								<li class="option_item col-md-4 col-sm-4 col-xs-6 {if $product_option.class}{$product_option.class}{/if}"
+									id="option_item_{$product_option.id_product_option}">
+									<input type="checkbox" class="hidden option_id not_unifrom comparator"
+										   name="options[][id]"
+										   value="{$product_option.id_product_option}"
+										   id="product_option_checkbox">
+									<input type="hidden" class="amount" name="options[][amount]" value="1"
+										   id="product_option_amount">
+			                            <span class="product_option_index"
+											  data-price="{$product_option.price}"
+											  data-max_amount="{$product_option.max_amount}">
+			                                <span class="product_option_index_img">
+			                                    <span class="product_option_delete"></span>
+			                                </span>
+			                                <span class="product_option_index_name">{$product_option.name}</span>
+			                            </span>
+								</li>
+							{/foreach}
+						</ul>
+					</form>
+				</div>
 			{/if}
 		</div> <!-- end pb-right-column-->
 		<div class="clearfix"></div>
