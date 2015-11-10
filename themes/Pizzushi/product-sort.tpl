@@ -40,27 +40,43 @@
 <form id="productsSortForm{if isset($paginationId)}_{$paginationId}{/if}" action="{$request|escape:'html':'UTF-8'}" class="productsSortForm">
 	<div class="select selector1 col-md-4 col-sm-12 col-xs-12">
 		<label for="selectProductSort{if isset($paginationId)}_{$paginationId}{/if}"><span class="square"></span>По цене</label>
-		<select id="selectProductSort{if isset($paginationId)}_{$paginationId}{/if}" class="selectProductSort form-control">
-			<option value="{if $page_name != 'best-sales'}{$orderbydefault|escape:'html':'UTF-8'}:{$orderwaydefault|escape:'html':'UTF-8'}{/if}"{if !in_array($orderby, array('price', 'name', 'quantity', 'reference')) && $orderby eq $orderbydefault} selected="selected"{/if}>--</option>
+		<select id="selectProductSort{if isset($paginationId)}_{$paginationId}{/if}" class="selectProductSort not_unifrom">
+			<option value="{if $page_name != 'best-sales'}{$orderbydefault|escape:'html':'UTF-8'}:{$orderwaydefault|escape:'html':'UTF-8'}{/if}"{if !in_array($orderby, array('price', 'name', 'quantity', 'reference')) && $orderby eq $orderbydefault} selected="selected"{/if}></option>
 			{if !$PS_CATALOG_MODE}
 				<option value="price:asc"{if $orderby eq 'price' AND $orderway eq 'asc'} selected="selected"{/if}>{l s='Price: Lowest first'}</option>
 				<option value="price:desc"{if $orderby eq 'price' AND $orderway eq 'desc'} selected="selected"{/if}>{l s='Price: Highest first'}</option>
 			{/if}
 		</select>
 	</div>
-	{*<div class="select selector2 col-md-4 col-sm-12 col-xs-12">*}
-		{*<label for="selectProductSort{if isset($paginationId)}_{$paginationId}{/if}"><span class="square"></span>Ингридиенты</label>*}
-		{*<select id="selectProductSort{if isset($paginationId)}_{$paginationId}{/if}" class="selectProductSort form-control">*}
-			{*<option value="{if $page_name != 'best-sales'}{$orderbydefault|escape:'html':'UTF-8'}:{$orderwaydefault|escape:'html':'UTF-8'}{/if}"{if !in_array($orderby, array('price', 'name', 'quantity', 'reference')) && $orderby eq $orderbydefault} selected="selected"{/if}>--</option>*}
-			{*<option value="name:asc"{if $orderby eq 'name' AND $orderway eq 'asc'} selected="selected"{/if}>{l s='Product Name: A to Z'}</option>*}
-			{*<option value="name:desc"{if $orderby eq 'name' AND $orderway eq 'desc'} selected="selected"{/if}>{l s='Product Name: Z to A'}</option>*}
-			{*{if $PS_STOCK_MANAGEMENT && !$PS_CATALOG_MODE}*}
-				{*<option value="quantity:desc"{if $orderby eq 'quantity' AND $orderway eq 'desc'} selected="selected"{/if}>{l s='In stock'}</option>*}
-			{*{/if}*}
-			{*<option value="reference:asc"{if $orderby eq 'reference' AND $orderway eq 'asc'} selected="selected"{/if}>{l s='Reference: Lowest first'}</option>*}
-			{*<option value="reference:desc"{if $orderby eq 'reference' AND $orderway eq 'desc'} selected="selected"{/if}>{l s='Reference: Highest first'}</option>*}
-		{*</select>*}
-	{*</div>*}
+	<div class="select col-md-4 col-sm-12 col-xs-12">
+		<label for="selectProductSort{if isset($paginationId)}_{$paginationId}{/if}"><span class="square"></span>Ингридиенты</label>
+		<div id="selectProductSort{if isset($paginationId)}_{$paginationId}{/if}" class="custom_select">
+			<span class="selecter">
+				<span class="selecter-inner">
+					{assign var=count value=0}
+					{foreach from=$products_options item=products_option name=products_option}
+						{if $products_option.id_product_option|in_array:$ingfilter}
+							{$products_option.name}{if $count != ($ingfilter|count -1)},{/if}
+							{assign var=count value=$count+1}
+						{/if}
+					{/foreach}
+				</span>
+			</span>
+			<div class="list">
+				{foreach from=$products_options item=products_option}
+					<input type="checkbox"
+						   name="sort_ingredients[]"
+						   id="ing_{$products_option.id_product_option}"
+						   class="not_unifrom hidden ing_sort_check"
+						   value="{$products_option.id_product_option}"
+						   {if $products_option.id_product_option|in_array:$ingfilter}checked="checked"{/if}>
+					<label class="ing_select" for="ing_{$products_option.id_product_option}">
+						{$products_option.name|trim	}
+					</label>
+				{/foreach}
+			</div>
+		</div>
+	</div>
 	{*<div class="select selector3 col-md-4 col-sm-12 col-xs-12">*}
 		{*<label for="selectProductSort{if isset($paginationId)}_{$paginationId}{/if}"><span class="square"></span>Вид пиццы</label>*}
 		{*<select id="selectProductSort{if isset($paginationId)}_{$paginationId}{/if}" class="selectProductSort form-control">*}

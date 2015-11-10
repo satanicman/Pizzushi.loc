@@ -683,7 +683,7 @@ class Category extends CategoryCore
      * @return array|int|false Products, number of products or false (no access)
      * @throws PrestaShopDatabaseException
      */
-    public function getProducts($id_lang, $p, $n, $order_by = null, $order_way = null, $get_total = false, $active = true, $random = false, $random_number_products = 1, $check_access = true, Context $context = null)
+    public function getProducts($id_lang, $p, $n, $order_by = null, $order_way = null, $get_total = false, $active = true, $random = false, $random_number_products = 1, $check_access = true, Context $context = null, $options = null)
     {
         if (!$context) {
             $context = Context::getContext();
@@ -734,6 +734,11 @@ class Category extends CategoryCore
             $order_by = 'orderprice';
         }
 
+        if($options) {
+            $optionsSql = ' AND pop.id_product_option IN ('.implode (",", $options).')';
+            $optionHaving = ' having count(distinct pop.id_product_option)='.count($options);
+        }
+
         $nb_days_new_product = Configuration::get('PS_NB_DAYS_NEW_PRODUCT');
         if (!Validate::isUnsignedInt($nb_days_new_product)) {
             $nb_days_new_product = 20;
@@ -765,12 +770,16 @@ class Category extends CategoryCore
 					AND il.`id_lang` = '.(int)$id_lang.')
 				LEFT JOIN `'._DB_PREFIX_.'manufacturer` m
 					ON m.`id_manufacturer` = p.`id_manufacturer`
+				LEFT JOIN `'._DB_PREFIX_.'product_option_product` pop
+					ON pop.`id_product` = p.`id_product`
 				WHERE product_shop.`id_shop` = '.(int)$context->shop->id.'
 					AND cp.`id_category` = '.(int)$this->id
                     .($active ? ' AND product_shop.`active` = 1' : '')
+                    .($optionsSql ? $optionsSql : '')
                     .($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '')
                     .($id_supplier ? ' AND p.id_supplier = '.(int)$id_supplier : '')
-                    .' GROUP BY cp.id_product';
+                    .' GROUP BY cp.id_product'.($optionHaving ? $optionHaving : '');
+
 
         if ($random === true) {
             $sql .= ' ORDER BY RAND() LIMIT '.(int)$random_number_products;

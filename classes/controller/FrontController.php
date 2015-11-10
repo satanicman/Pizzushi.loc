@@ -1093,6 +1093,8 @@ class FrontControllerCore extends Controller
 
         $this->orderBy  = Tools::strtolower(Tools::getValue('orderby', $order_by_values[(int)Configuration::get('PS_PRODUCTS_ORDER_BY')]));
         $this->orderWay = Tools::strtolower(Tools::getValue('orderway', $order_way_values[(int)Configuration::get('PS_PRODUCTS_ORDER_WAY')]));
+        if(Tools::getValue('ingFilter'))
+            $this->ingFilter = explode(",", Tools::getValue('ingFilter'));
 
         if (!in_array($this->orderBy, $order_by_values)) {
             $this->orderBy = $order_by_values[0];
@@ -1105,6 +1107,7 @@ class FrontControllerCore extends Controller
         $this->context->smarty->assign(array(
             'orderby'          => $this->orderBy,
             'orderway'         => $this->orderWay,
+            'ingfilter'        => $this->ingFilter,
             'orderbydefault'   => $order_by_values[(int)Configuration::get('PS_PRODUCTS_ORDER_BY')],
             'orderwayposition' => $order_way_values[(int)Configuration::get('PS_PRODUCTS_ORDER_WAY')], // Deprecated: orderwayposition
             'orderwaydefault'  => $order_way_values[(int)Configuration::get('PS_PRODUCTS_ORDER_WAY')],

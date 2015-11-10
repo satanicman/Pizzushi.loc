@@ -226,9 +226,9 @@ $(document).on('mouseover', '#views_block li a', function(){
 	displayImage($(this));
 });
 //add a link on the span 'view full size' and on the big image
-$(document).on('click', '#view_full_size, #image-block', function(e){
-	$('#views_block .shown').click();
-});
+//$(document).on('click', '#view_full_size, #image-block', function(e){
+//	$('#views_block .shown').click();
+//});
 //catch the click on the "more infos" button at the top of the page
 $(document).on('click', '#short_description_block .button', function(e){
 	$('#more_info_tab_more_info').click();
@@ -286,17 +286,17 @@ if (typeof(contentOnly) != 'undefined' && contentOnly)
 		e.preventDefault();
 	});
 
-	$(document).on('click', '#image-block', function(e){
-		e.preventDefault();
-		var productUrl = window.document.location.href + '';
-		var data = productUrl.replace(/[\?|&]content_only=1/, '');
-
-		if (window.parent.page_name == 'search')
-			data += ((data.indexOf('?') < 0) ? '?' : '&') + 'HTTP_REFERER=' + encodeURIComponent(window.parent.document.location.href);
-
-		window.parent.document.location.href = data;
-		return;
-	});
+	//$(document).on('click', '#image-block', function(e){
+	//	e.preventDefault();
+	//	var productUrl = window.document.location.href + '';
+	//	var data = productUrl.replace(/[\?|&]content_only=1/, '');
+    //
+	//	if (window.parent.page_name == 'search')
+	//		data += ((data.indexOf('?') < 0) ? '?' : '&') + 'HTTP_REFERER=' + encodeURIComponent(window.parent.document.location.href);
+    //
+	//	window.parent.document.location.href = data;
+	//	return;
+	//});
 }
 
 // The button to increment the product value

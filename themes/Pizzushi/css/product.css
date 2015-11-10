@@ -1,9 +1,7 @@
 /* product desc */
 /* primary_block ***************************************************************************** */
 .primary_block {
-  background-color: #fff;
   padding: 40px 70px 60px 45px;
-  border-radius: 7px;
   margin: 0;
 }
 
@@ -36,7 +34,7 @@ a.fancybox-nav {
 .pb-left-column #image-block {
   position: relative;
   display: block;
-  cursor: pointer;
+  /*cursor: pointer;*/
   font-size: 16px;
   padding: 0;
 }

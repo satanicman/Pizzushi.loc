@@ -146,13 +146,18 @@ class CategoryControllerCore extends FrontController
         $this->assignProductList();
 
         $products = $this->category->getProducts($this->context->language->id, (int)$this->p, (int)$this->n, $this->orderBy, $this->orderWay);
+
+        $products_options = ProductOption::getProductOptions($this->context->language->id);
+
         $combinations = $this->getProductAttributeCombinations($products);
-        $this->context->smarty->assign('combinations', $combinations);
+//        $this->context->smarty->assign('combinations', $combinations);
 
         $this->context->smarty->assign(array(
             'category'             => $this->category,
+            'combinations'         => $combinations,
             'description_short'    => Tools::truncateString($this->category->description, 350),
             'products'             => (isset($this->cat_products) && $this->cat_products) ? $this->cat_products : null,
+            'products_options'     => (isset($products_options) && $products_options) ? $products_options : null,
             'id_category'          => (int)$this->category->id,
             'id_category_parent'   => (int)$this->category->id_parent,
             'return_category_name' => Tools::safeOutput($this->category->name),
@@ -247,7 +252,7 @@ class CategoryControllerCore extends FrontController
             $this->context->smarty->assign('categoryNameComplement', '');
             $this->nbProducts = $this->category->getProducts(null, null, null, $this->orderBy, $this->orderWay, true);
             $this->pagination((int)$this->nbProducts); // Pagination must be call after "getProducts"
-            $this->cat_products = $this->category->getProducts($this->context->language->id, (int)$this->p, (int)$this->n, $this->orderBy, $this->orderWay);
+            $this->cat_products = $this->category->getProducts($this->context->language->id, (int)$this->p, (int)$this->n, $this->orderBy, $this->orderWay, false, true, false, 1, true, null, $this->ingFilter);
         }
         // Hook executed, use the override
         else {
